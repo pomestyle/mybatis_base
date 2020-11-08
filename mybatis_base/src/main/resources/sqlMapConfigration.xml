@@ -1,0 +1,14 @@
+<configuration>
+
+    <!--数据库连接信息-->
+    <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+    <property name="jdbcUrl"  value="jdbc:mysql:///stu_test"></property>
+    <property name="username" value="root"></property>
+    <property name="password" value="root"></property>
+
+
+    <!--    配置mapper sql信息文件 会有多个-->
+    <mapper resource="mapper.xml"></mapper>
+    <mapper resource="mapper2.xml"></mapper>
+
+</configuration>

@@ -1,0 +1,23 @@
+
+<!--mapper代理模式
+ 语句id 必须和mapper 中查询语句方法名保持一致
+ namespace 必须是类的权限定命名
+
+ 原因是JDK动态代理中 无法提供对应的namespace和查询语句配置id
+ 故此用方法名和mapper类的全限定命名进行使用 key从获取mapper配置文件sql语句的入参,返回类型;
+-->
+
+<mapper namespace="com.udeam.test.mapper.UserMapper">
+
+    <!--    表示查询单个-->
+    <select id="selectOne2" paramterType="com.udeam.pojo.User" resultType="com.udeam.pojo.User">
+        select * from user where id = #{id} and name = #{name}
+    </select>
+
+
+    <!--    表示查询多个-->
+    <select id="selectList2" resultType="com.udeam.pojo.User">
+        select * from user
+    </select>
+
+</mapper>
