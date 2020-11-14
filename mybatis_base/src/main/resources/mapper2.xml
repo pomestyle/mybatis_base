@@ -20,4 +20,18 @@
         select * from user
     </select>
 
+
+    <delete id="delete" paramterType="com.udeam.pojo.User">
+        delete  from user where id = #{id}
+    </delete>
+
+
+    <update id="update" paramterType="com.udeam.pojo.User">
+        update  user set name=#{name} where id = #{id}
+    </update>
+
+    <update id="insert" paramterType="com.udeam.pojo.User">
+        INSERT INTO user(name)
+        VALUES (#{name})
+    </update>
 </mapper>

@@ -23,6 +23,9 @@ public interface SqlSession {
     //更新
     public Integer update(String statementId,Object...params) throws IllegalAccessException, NoSuchFieldException, SQLException;
 
+    //新增
+    public Integer insert(String statementId,Object...params) throws IllegalAccessException, NoSuchFieldException, SQLException;
+
     public void close() throws Exception;
 
 

@@ -2,6 +2,7 @@ package com.udeam.xml;
 
 import com.udeam.config.Configration;
 import com.udeam.config.MappedStatement;
+import com.udeam.eumus.ExcutorEnum;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -37,13 +38,15 @@ public class XMLMapperBuilder {
         //读取每一个查询标签
         List<Element> list = rootElement.selectNodes("//select");
         List<Element> update = rootElement.selectNodes("//update");
+        List<Element> insert = rootElement.selectNodes("//insert");
         List<Element> delete = rootElement.selectNodes("//delete");
-        mappedStatementVoid(list, namespace);
-        mappedStatementVoid(update, namespace);
-        mappedStatementVoid(delete, namespace);
+        mappedStatementVoid(list, namespace, ExcutorEnum.TYPE_QUERY.getCode());
+        mappedStatementVoid(update, namespace,ExcutorEnum.TYPE_UPDATE.getCode());
+        mappedStatementVoid(insert, namespace,ExcutorEnum.TYPE_ADD.getCode());
+        mappedStatementVoid(delete, namespace,ExcutorEnum.TYPE_DELETE.getCode());
     }
 
-    private void mappedStatementVoid(List<Element> list,String namespace) throws ClassNotFoundException {
+    private void mappedStatementVoid(List<Element> list,String namespace,Integer code) throws ClassNotFoundException {
         if (list==null || list.size() == 0 ){
             return;
         }
@@ -55,6 +58,10 @@ public class XMLMapperBuilder {
             //设置id
             String id = element.attributeValue("id");
             mappedStatement.setId(id);
+
+            //设置Sql 类型
+
+            mappedStatement.setCodeType(code);
 
             //设置入参类型
             String paramterType = element.attributeValue("paramterType");

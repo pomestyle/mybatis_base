@@ -21,4 +21,9 @@
         update  user set name=#{name} where id = #{id}
     </update>
 
+    <update id="insert" paramterType="com.udeam.pojo.User">
+        INSERT INTO user(name)
+        VALUES (#{name})
+    </update>
+
 </mapper>

@@ -1,9 +1,16 @@
 package com.udeam.config;
 
+import com.udeam.eumus.ExcutorEnum;
+
 /**
  * 保存每个mapper中sql的sql语句类型 , sql入参,返回类型以及sql的id
  */
 public class MappedStatement {
+
+    /**
+     * sql类型
+     */
+    private Integer codeType;
 
     /**
      * sql xml语句id 表示每条sql的唯一性
@@ -25,6 +32,14 @@ public class MappedStatement {
      */
     private String sql;
 
+
+    public Integer getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(Integer codeType) {
+        this.codeType = codeType;
+    }
 
     public String getId() {
         return id;

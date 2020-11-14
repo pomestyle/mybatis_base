@@ -2,6 +2,7 @@ package com.udeam.interfaces.impl;
 
 import com.udeam.config.Configration;
 import com.udeam.config.MappedStatement;
+import com.udeam.eumus.ExcutorEnum;
 import com.udeam.interfaces.Excutor;
 import com.udeam.interfaces.SqlSession;
 
@@ -41,10 +42,10 @@ public class DefaultSqlSession implements SqlSession {
     @Override
     public <T> T selectOne(String statementId, Object... params) throws IllegalAccessException, IntrospectionException, InstantiationException, SQLException, InvocationTargetException, NoSuchFieldException {
         List<Object> objects = selectList(statementId, params);
-        if (objects==null || objects.size() == 0){
+        if (objects == null || objects.size() == 0) {
             return null;
         }
-        if (objects.size()>1){
+        if (objects.size() > 1) {
             throw new RuntimeException("存在多个值!");
         }
 
@@ -68,6 +69,14 @@ public class DefaultSqlSession implements SqlSession {
     }
 
     @Override
+    public Integer insert(String statementId, Object... params) throws IllegalAccessException, NoSuchFieldException, SQLException {
+        //根据 statementId 获取 MappedStatement 对象
+        MappedStatement mappedStatement = configration.getMapperStamentMap().get(statementId);
+        int insert = simpleExcutor.insert(configration, mappedStatement, params);
+        return insert;
+    }
+
+    @Override
     public void close() throws Exception {
         simpleExcutor.close();
     }
@@ -88,29 +97,40 @@ public class DefaultSqlSession implements SqlSession {
                 String name = method.getName();
                 //拼接statementid 从map中获取sql 入参类型,返回类型
                 String statementid = className + "." + name;
-                //MappedStatement mappedStatement = configration.getMapperStamentMap().get(statementid);
+                MappedStatement mappedStatement = configration.getMapperStamentMap().get(statementid);
             /*    //入参类型
                 Class<?> paramType = mappedStatement.getParamType();
                 //出参类型
                 Class<?> resultType = mappedStatement.getResultType();
 */
-                //判断是否实现泛型类型参数化
-                Type genericReturnType = method.getGenericReturnType();
-                if (genericReturnType instanceof ParameterizedType) {
-                    //还是去执行查询方法
-                    return selectList(statementid, args);
+
+
+                //泛型去判断调用哪个方法,增加,删除,更新,查询
+                Integer paramType = mappedStatement.getCodeType();
+                if (paramType == ExcutorEnum.TYPE_QUERY.getCode()) {
+                    //判断是否实现泛型类型参数化
+                    Type genericReturnType = method.getGenericReturnType();
+                    if (genericReturnType instanceof ParameterizedType) {
+                        //还是去执行查询方法
+                        return selectList(statementid, args);
+                    }
+                    return selectOne(statementid, args);
+
+                } else if (paramType == ExcutorEnum.TYPE_ADD.getCode()) {
+                    return insert(statementid, args);
+                } else if (paramType == ExcutorEnum.TYPE_UPDATE.getCode()) {
+                    return update(statementid, args);
+                } else if (paramType == ExcutorEnum.TYPE_DELETE.getCode()) {
+                    return delete(statementid, args);
+                } else {
+                    throw new RuntimeException("无效的语句...");
                 }
-                return selectOne(statementid, args);
-
-
             }
         });
 
 
         return (T) o;
     }
-
-
 
 
 }

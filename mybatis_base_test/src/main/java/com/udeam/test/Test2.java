@@ -5,16 +5,18 @@ import com.udeam.interfaces.SqlSession;
 import com.udeam.interfaces.SqlSessionFactory;
 import com.udeam.io.Resource;
 import com.udeam.pojo.User;
+import com.udeam.test.mapper.UserMapper;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.InputStream;
 import java.util.List;
 
-public class Test {
+public class Test2 {
 
     static InputStream inputStream = null;
     static SqlSession sqlSession = null;
+    static  UserMapper userMapper = null;
 
     @Before
     public void test0() throws Exception {
@@ -27,6 +29,7 @@ public class Test {
         // 3 创建会话
         SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
         sqlSession = sqlSessionFactory.openSqlSession();
+        userMapper = sqlSession.getMapper(UserMapper.class);
     }
 
     /**
@@ -41,10 +44,9 @@ public class Test {
         user.setId(2);
         user.setName("小王2");
 
-        User user1 = sqlSession.selectOne("User.selectOne", user);
-        System.out.println(user1 + " \n ");
-        List<User> usersList = sqlSession.selectList("User.selectList");
-        System.out.println(usersList);
+        // 代理测试
+         System.out.println(userMapper.selectList2());
+         System.out.println(userMapper.selectOne2(user));
 
     }
 
@@ -58,11 +60,9 @@ public class Test {
 
         User user = new User();
         user.setId(2);
-        user.setName("小王2");
+        user.setName("[mapper代理]小王2");
 
-        //删除
-        Integer user2 = sqlSession.delete("User.delete", user);
-        System.out.println(user2);
+        System.out.println(userMapper.delete(user));
 
 
     }
@@ -76,8 +76,8 @@ public class Test {
     @org.junit.Test
     public void test2() throws Exception {
         User user = new User();
-        user.setName("我是新增的小王...");
-        sqlSession.insert("User.insert", user);
+        user.setName("我是 [mapper代理] 新增的小王鸭...");
+        System.out.println(userMapper.insert(user));
 
     }
 
@@ -90,10 +90,9 @@ public class Test {
     public void test4() throws Exception {
         User user = new User();
         user.setId(2);
-        user.setName("小王2");
+        user.setName("我是[mapper代理]修改的小王2...");
         //修改
-        Integer user1 = sqlSession.update("User.update", user);
-        System.out.println(user1);
+        System.out.println(userMapper.update(user));
 
     }
 

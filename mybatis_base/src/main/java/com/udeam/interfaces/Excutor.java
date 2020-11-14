@@ -28,4 +28,6 @@ public interface Excutor {
     int delete(Configration configration, MappedStatement mappedStatement, Object[] params) throws SQLException, NoSuchFieldException, IllegalAccessException, InstantiationException;
 
     int  update(Configration configration, MappedStatement mappedStatement,Object[] params) throws IllegalAccessException, NoSuchFieldException, SQLException;
+
+    int  insert(Configration configration, MappedStatement mappedStatement,Object[] params) throws IllegalAccessException, NoSuchFieldException, SQLException;
 }

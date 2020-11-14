@@ -59,7 +59,7 @@ public class SimpleExcutor implements Excutor {
             Object o = declaredField.get(params[0]);
             //占位符设置值  列是从1开始的
             preparedStatement.setObject(i + 1, o);
-            System.out.println(" 当前属性是 " + content + " 值是 : " + o);
+            System.out.println(" 当前[查询]属性是 " + content + " 值是 : " + o);
         }
 
         // 5. 执行sql
@@ -136,7 +136,7 @@ public class SimpleExcutor implements Excutor {
             Object o = declaredField.get(params[0]);
             //占位符设置值  列是从1开始的
             preparedStatement.setObject(i + 1, o);
-            System.out.println(" 当前属性是 " + content + " 值是 : " + o);
+            System.out.println(" 当前[删除]属性是 " + content + " 值是 : " + o);
         }
 
         // 5. 执行sql
@@ -179,7 +179,54 @@ public class SimpleExcutor implements Excutor {
             Object o = declaredField.get(params[0]);
             //占位符设置值  列是从1开始的
             preparedStatement.setObject(i + 1, o);
-            System.out.println(" 当前属性是 " + content + " 值是 : " + o);
+            System.out.println(" 当前[更新]属性是 " + content + " 值是 : " + o);
+        }
+
+
+        // 5. 执行sql
+        int resultSet = preparedStatement.executeUpdate();
+        if (resultSet == 1) {
+            return 1;
+        }
+
+        return -1;
+
+    }
+
+    @Override
+    public int insert(Configration configration, MappedStatement mappedStatement, Object[] params) throws IllegalAccessException, NoSuchFieldException, SQLException {
+
+        //1 获取连接
+        connection = configration.getDataSource().getConnection();
+
+        //2 获取sql
+        String sql = mappedStatement.getSql();
+        //对sql进行处理    //转换sql语句： select * from user where id = ? and name = ?
+        BoundSql boundSql = getBoundSql(sql);
+
+        //最终的sql
+        String finalSql = boundSql.getSqlText();
+
+        // 3 预编译对象
+        PreparedStatement preparedStatement = connection.prepareStatement(finalSql);
+
+        //获取传入的参数类型
+        Class<?> paramType = mappedStatement.getParamType();
+
+        // 4 获取传入参数
+        List<ParameterMapping> parameterMappingList = boundSql.getParameterMappingList();
+
+        //设置参数
+        for (int i = 0; i < parameterMappingList.size(); i++) {
+            String content = parameterMappingList.get(i).getContent();
+            //反射设置值
+            Field declaredField = paramType.getDeclaredField(content);
+            //强制访问
+            declaredField.setAccessible(true);
+            Object o = declaredField.get(params[0]);
+            //占位符设置值  列是从1开始的
+            preparedStatement.setObject(i + 1, o);
+            System.out.println(" 当前[新增]属性是 " + content + " 值是 : " + o);
         }
 
 
