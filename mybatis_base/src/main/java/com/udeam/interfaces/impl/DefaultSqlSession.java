@@ -23,7 +23,7 @@ public class DefaultSqlSession implements SqlSession {
     //sql执行器
     private Excutor simpleExcutor = new SimpleExcutor();
 
-    public DefaultSqlSession(Configration configration) {
+    public DefaultSqlSession(Configration configration) throws Exception {
 
         this.configration = configration;
     }

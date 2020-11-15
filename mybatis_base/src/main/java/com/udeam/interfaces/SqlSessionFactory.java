@@ -5,5 +5,5 @@ package com.udeam.interfaces;
  */
 public interface SqlSessionFactory {
 
-    public SqlSession openSqlSession();
+    public SqlSession openSqlSession() throws Exception;
 }

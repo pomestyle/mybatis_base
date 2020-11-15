@@ -26,5 +26,7 @@ public interface UserMapper {
 
     Integer insert(User user);
 
+    Integer deleteById(Integer id);
+
     Integer update(User user);
 }

@@ -7,6 +7,7 @@ import com.udeam.interfaces.Excutor;
 import com.udeam.utils.GenericTokenParser;
 import com.udeam.utils.ParameterMapping;
 import com.udeam.utils.ParameterMappingTokenHandler;
+import com.udeam.utils.TypeAliasRegistry;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SimpleExcutor implements Excutor {
 
     private Connection connection;
+
 
     @Override
     public <E> List<E> query(Configration configration, MappedStatement mappedStatement, Object[] params) throws SQLException, IllegalAccessException, InstantiationException, NoSuchFieldException, IntrospectionException, InvocationTargetException {
@@ -52,14 +54,18 @@ public class SimpleExcutor implements Excutor {
         //设置参数
         for (int i = 0; i < parameterMappingList.size(); i++) {
             String content = parameterMappingList.get(i).getContent();
-            //反射设置值
-            Field declaredField = paramType.getDeclaredField(content);
-            //强制访问
-            declaredField.setAccessible(true);
-            Object o = declaredField.get(params[0]);
-            //占位符设置值  列是从1开始的
-            preparedStatement.setObject(i + 1, o);
-            System.out.println(" 当前[查询]属性是 " + content + " 值是 : " + o);
+            if (TypeAliasRegistry.typeAliases.containsValue(paramType)) {
+                preparedStatement.setObject(i + 1, params[0]);
+            } else {
+                //反射设置值
+                Field declaredField = paramType.getDeclaredField(content);
+                //强制访问
+                declaredField.setAccessible(true);
+                Object o = declaredField.get(params[0]);
+                //占位符设置值  列是从1开始的
+                preparedStatement.setObject(i + 1, o);
+                System.out.println(" 当前[删除]属性是 " + content + " 值是 : " + o);
+            }
         }
 
         // 5. 执行sql
@@ -129,15 +135,21 @@ public class SimpleExcutor implements Excutor {
         //设置参数
         for (int i = 0; i < parameterMappingList.size(); i++) {
             String content = parameterMappingList.get(i).getContent();
-            //反射设置值
-            Field declaredField = paramType.getDeclaredField(content);
-            //强制访问
-            declaredField.setAccessible(true);
-            Object o = declaredField.get(params[0]);
-            //占位符设置值  列是从1开始的
-            preparedStatement.setObject(i + 1, o);
-            System.out.println(" 当前[删除]属性是 " + content + " 值是 : " + o);
+            if (TypeAliasRegistry.typeAliases.containsValue(paramType)) {
+                preparedStatement.setObject(i + 1, params[0]);
+            } else {
+                //反射设置值
+                Field declaredField = paramType.getDeclaredField(content);
+                //强制访问
+                declaredField.setAccessible(true);
+                Object o = declaredField.get(params[0]);
+                //占位符设置值  列是从1开始的
+                preparedStatement.setObject(i + 1, o);
+                System.out.println(" 当前[删除]属性是 " + content + " 值是 : " + o);
+            }
+
         }
+
 
         // 5. 执行sql
         int resultSet = preparedStatement.executeUpdate();
@@ -243,6 +255,7 @@ public class SimpleExcutor implements Excutor {
 
     /**
      * 完成对#{}的解析工作：1.将#{}使用？进行代替，2.解析出#{}里面的值进行存储
+     *
      * @param sql
      * @return
      */
@@ -255,8 +268,9 @@ public class SimpleExcutor implements Excutor {
         //#{}里面解析出来的参数名称
         List<ParameterMapping> parameterMappings = parameterMappingTokenHandler.getParameterMappings();
 
-        BoundSql boundSql = new BoundSql(parseSql,parameterMappings);
+        BoundSql boundSql = new BoundSql(parseSql, parameterMappings);
         return boundSql;
 
     }
+
 }

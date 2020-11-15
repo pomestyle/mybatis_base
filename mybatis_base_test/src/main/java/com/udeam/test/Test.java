@@ -67,6 +67,34 @@ public class Test {
 
     }
 
+    /**
+     * 根据id删除
+     *
+     * @throws Exception
+     */
+    @org.junit.Test
+    public void test31() throws Exception {
+        Integer user2 = sqlSession.delete("User.deleteById", 2);
+        System.out.println(user2);
+    }
+
+    /**
+     * 根据 name删除
+     *
+     * @throws Exception
+     */
+    @org.junit.Test
+    public void test32() throws Exception {
+        Integer user2 = sqlSession.delete("User.deleteByName", "删除");
+        System.out.println(user2);
+    }
+
+    @org.junit.Test
+    public void test33() throws Exception {
+        User user2 = sqlSession.selectOne("User.selectById", 1);
+        System.out.println(user2);
+    }
+
 
     /**
      * 新增

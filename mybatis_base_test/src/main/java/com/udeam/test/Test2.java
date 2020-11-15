@@ -69,6 +69,17 @@ public class Test2 {
 
 
     /**
+     * 根据id删除
+     *
+     * @throws Exception
+     */
+    @org.junit.Test
+    public void test31() throws Exception {
+        System.out.println(userMapper.deleteById(12));
+    }
+
+
+    /**
      * 新增
      *
      * @throws Exception
@@ -78,7 +89,6 @@ public class Test2 {
         User user = new User();
         user.setName("我是 [mapper代理] 新增的小王鸭...");
         System.out.println(userMapper.insert(user));
-
     }
 
     /**
@@ -89,11 +99,10 @@ public class Test2 {
     @org.junit.Test
     public void test4() throws Exception {
         User user = new User();
-        user.setId(2);
-        user.setName("我是[mapper代理]修改的小王2...");
+        user.setId(12);
+        user.setName("我是[mapper代理]修改的小王 12...");
         //修改
         System.out.println(userMapper.update(user));
-
     }
 
 

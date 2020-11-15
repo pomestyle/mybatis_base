@@ -2,6 +2,7 @@ package com.udeam.interfaces;
 
 import com.udeam.config.Configration;
 import com.udeam.config.MappedStatement;
+import com.udeam.utils.TypeAliasRegistry;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;

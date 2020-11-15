@@ -6,10 +6,17 @@
     </select>
 
 
+    <select id="selectById" paramterType="Integer" resultType="com.udeam.pojo.User">
+        select * from user where id = #{id}
+    </select>
+
+
     <!--    表示查询多个-->
     <select id="selectList" resultType="com.udeam.pojo.User">
         select * from user
     </select>
+
+
 
 
     <delete id="delete" paramterType="com.udeam.pojo.User">
@@ -25,5 +32,13 @@
         INSERT INTO user(name)
         VALUES (#{name})
     </update>
+
+    <delete id="deleteById" paramterType="Integer">
+        delete  from user where id = #{id}
+    </delete>
+
+    <delete id="deleteByName" paramterType="String">
+        delete  from user where name = #{name}
+    </delete>
 
 </mapper>

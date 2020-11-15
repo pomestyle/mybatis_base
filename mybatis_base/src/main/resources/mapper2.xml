@@ -9,6 +9,7 @@
 
 <mapper namespace="com.udeam.test.mapper.UserMapper">
 
+
     <!--    表示查询单个-->
     <select id="selectOne2" paramterType="com.udeam.pojo.User" resultType="com.udeam.pojo.User">
         select * from user where id = #{id} and name = #{name}
@@ -30,8 +31,13 @@
         update  user set name=#{name} where id = #{id}
     </update>
 
+    <delete id="deleteById" paramterType="Integer">
+        delete  from user where id = #{id}
+    </delete>
+
     <update id="insert" paramterType="com.udeam.pojo.User">
-        INSERT INTO user(name)
-        VALUES (#{name})
+        insert into user(name) values (#{name})
     </update>
+
+
 </mapper>
